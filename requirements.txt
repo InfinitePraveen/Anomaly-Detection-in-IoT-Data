@@ -1,0 +1,9 @@
+numpy
+pandas
+matplotlib
+scikit-learn
+jupyter
+notebook
+tensorflow>=2.16,<2.21
+keras>=3.0,<4.0
+flask
