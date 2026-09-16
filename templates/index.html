@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>IoT Anomaly Detector</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main class="container">
+        <section class="hero">
+            <p class="eyebrow">Keras • Autoencoder • Time Series</p>
+            <h1>IoT Anomaly Detector</h1>
+            <p class="subtitle">Submit a sensor window and see whether its reconstruction error looks unusual compared with normal IoT behavior.</p>
+        </section>
+
+        <section class="card">
+            <h2>Test a Sensor Window</h2>
+            <p>Enter exactly <strong>{{ required_points }}</strong> comma-separated sensor readings.</p>
+            <form method="post">
+                <textarea name="sensor_values" rows="7" placeholder="20.1, 20.4, 19.8, ..."></textarea>
+                <button type="submit">Detect Anomaly</button>
+            </form>
+        </section>
+
+        {% if result %}
+        <section class="result {% if result.is_anomaly %}danger{% else %}safe{% endif %}">
+            {% if result.is_anomaly %}
+                <span class="status">ANOMALY DETECTED</span>
+                <h2>This window looks unusual.</h2>
+            {% else %}
+                <span class="status">NORMAL</span>
+                <h2>This window looks similar to learned normal behavior.</h2>
+            {% endif %}
+            <div class="metrics">
+                <div><span>Reconstruction error</span><strong>{{ "%.6f"|format(result.error) }}</strong></div>
+                <div><span>Threshold</span><strong>{{ "%.6f"|format(result.threshold) }}</strong></div>
+            </div>
+        </section>
+        {% endif %}
+
+        {% if error %}
+        <section class="result danger">
+            <span class="status">CHECK INPUT</span>
+            <p>{{ error }}</p>
+        </section>
+        {% endif %}
+
+        <section class="card explanation">
+            <h2>How it works</h2>
+            <p>The autoencoder learns to reconstruct normal sensor windows. A larger reconstruction error means the observed pattern is harder for the model to reproduce, so it can be treated as an anomaly signal.</p>
+        </section>
+
+        <footer>
+            <span>Built by Praveen Kumar</span>
+            <span>
+                <a href="{{ github }}" target="_blank" rel="noopener">GitHub</a>
+                ·
+                <a href="{{ linkedin }}" target="_blank" rel="noopener">LinkedIn</a>
+            </span>
+        </footer>
+    </main>
+</body>
+</html>
